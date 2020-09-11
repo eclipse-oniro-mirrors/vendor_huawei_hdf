@@ -251,8 +251,6 @@ static int32_t SampleAttach(struct UartHost *host, struct HdfDeviceObject *devic
         HDF_LOGE("%s: OsalMemCalloc uartDevice error", __func__);
         return HDF_ERR_MALLOC_FAIL;
     }
-    SampleDispatchConstruct(uartDevice);
-    device->service = &uartDevice->ioService;
     ret = UartDeviceGetResource(uartDevice, device->property);
     if (ret != HDF_SUCCESS) {
         (void)OsalMemFree(uartDevice);
@@ -292,11 +290,20 @@ static void SampleDetach(struct UartHost *host)
 /* HdfDriverEntry implementations */
 static int32_t HdfUartSampleBind(struct HdfDeviceObject *device)
 {
+    struct UartHost *uartHost = NULL;
+
     if (device == NULL) {
         return HDF_ERR_INVALID_OBJECT;
     }
     HDF_LOGI("Enter %s:", __func__);
-    return (UartHostCreate(device) == NULL) ? HDF_FAILURE : HDF_SUCCESS;
+
+    uartHost = UartHostCreate(device);
+    if (uartHost == NULL) {
+        HDF_LOGE("%s: UartHostCreate failed", __func__);
+        return HDF_FAILURE;
+    }
+    uartHost->service.Dispatch = SampleDispatch;
+    return HDF_SUCCESS;
 }
 
 static int32_t HdfUartSampleInit(struct HdfDeviceObject *device)
