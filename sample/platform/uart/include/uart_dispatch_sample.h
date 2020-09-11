@@ -22,6 +22,6 @@ enum {
     UART_WRITE = 1
 };
 
-void SampleDispatchConstruct(struct UartDevice *device);
+int32_t SampleDispatch(struct HdfDeviceIoClient *client, int cmdId, struct HdfSBuf *data, struct HdfSBuf *reply);
 
 #endif // UART_DISPATCH_SAMPLE_H

@@ -45,14 +45,19 @@ static int32_t SampleDispatchWrite(struct UartDevice *device, struct HdfSBuf *tx
     return HDF_SUCCESS;
 }
 
-static int32_t SampleDispatch(struct HdfDeviceIoClient *client, int cmdId, struct HdfSBuf *data, struct HdfSBuf *reply)
+int32_t SampleDispatch(struct HdfDeviceIoClient *client, int cmdId, struct HdfSBuf *data, struct HdfSBuf *reply)
 {
     int32_t result = HDF_FAILURE;
     if (client == NULL || client->device == NULL) {
         HDF_LOGE("%s: client or client->device is NULL", __func__);
         return result;
     }
-    struct UartDevice *uartDevice = (struct UartDevice *)client->device->service;
+    struct UartHost *uartHost = (struct UartHost *)client->device->service;
+    if (uartHost == NULL) {
+        HDF_LOGE("%s: uartHost is NULL", __func__);
+        return result;
+    }
+    struct UartDevice *uartDevice = (struct UartDevice *)uartHost->priv;
     if (uartDevice == NULL) {
         HDF_LOGE("%s: uartDevice is NULL", __func__);
         return result;
@@ -66,12 +71,4 @@ static int32_t SampleDispatch(struct HdfDeviceIoClient *client, int cmdId, struc
             break;
     }
     return result;
-}
-
-void SampleDispatchConstruct(struct UartDevice *device)
-{
-    struct IDeviceIoService *ioService = &device->ioService;
-    if (ioService != NULL) {
-        ioService->Dispatch = &SampleDispatch;
-    }
 }
