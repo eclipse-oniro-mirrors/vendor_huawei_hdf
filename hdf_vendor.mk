@@ -13,10 +13,16 @@
 
 
     LITEOS_BASELIB += -lhdf_config
+ifeq ($(findstring y, $(LOSCFG_PLATFORM_HI3518EV300)$(LOSCFG_PLATFORM_HI3516DV300)), y)
     LIB_SUBDIRS += $(LITEOS_SOURCE_ROOT)/vendor/hisi/hi35xx/$(LITEOS_PLATFORM)/config
+    VENDOR_HDF_DRIVERS_PLATFORM_ROOT := $(LITEOSTOPDIR)/../../vendor/hisi/hi35xx/platform
+else ifeq ($(LOSCFG_PLATFORM_QEMU_ARM_VIRT_CA7), y)
+    LIB_SUBDIRS += $(LITEOS_SOURCE_ROOT)/vendor/qemu/arm/$(LITEOS_PLATFORM)/config
+    VENDOR_HDF_DRIVERS_PLATFORM_ROOT := $(LITEOSTOPDIR)/../../vendor/qemu/arm/platform
+else
+    $(error "No valid vendor paths added to LIB_SUBDIRS")
+endif
 
-
-VENDOR_HDF_DRIVERS_PLATFORM_ROOT := $(LITEOSTOPDIR)/../../vendor/hisi/hi35xx/platform
 VENDOR_HDF_DRIVERS_ROOT := $(LITEOSTOPDIR)/../../vendor/huawei/hdf
 
 ifeq ($(LOSCFG_DRIVERS_HDF_PLATFORM_I2C), y)
