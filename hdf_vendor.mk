@@ -17,8 +17,8 @@ ifeq ($(findstring y, $(LOSCFG_PLATFORM_HI3518EV300)$(LOSCFG_PLATFORM_HI3516DV30
     LIB_SUBDIRS += $(LITEOS_SOURCE_ROOT)/vendor/hisi/hi35xx/$(LITEOS_PLATFORM)/config
     VENDOR_HDF_DRIVERS_PLATFORM_ROOT := $(LITEOSTOPDIR)/../../vendor/hisi/hi35xx/platform
 else ifeq ($(LOSCFG_PLATFORM_QEMU_ARM_VIRT_CA7), y)
-    LIB_SUBDIRS += $(LITEOS_SOURCE_ROOT)/vendor/qemu/arm/$(LITEOS_PLATFORM)/config
-    VENDOR_HDF_DRIVERS_PLATFORM_ROOT := $(LITEOSTOPDIR)/../../vendor/qemu/arm/platform
+    LIB_SUBDIRS += $(LITEOS_SOURCE_ROOT)/device/qemu/arm/$(LITEOS_PLATFORM)/config
+    VENDOR_HDF_DRIVERS_PLATFORM_ROOT := $(LITEOSTOPDIR)/../../device/qemu/arm/platform
 else
     $(error "No valid vendor paths added to LIB_SUBDIRS")
 endif
