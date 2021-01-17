@@ -19,6 +19,9 @@ ifeq ($(findstring y, $(LOSCFG_PLATFORM_HI3518EV300)$(LOSCFG_PLATFORM_HI3516DV30
 else ifeq ($(LOSCFG_PLATFORM_QEMU_ARM_VIRT_CA7), y)
     LIB_SUBDIRS += $(LITEOS_SOURCE_ROOT)/device/qemu/arm/$(LITEOS_PLATFORM)/config
     VENDOR_HDF_DRIVERS_PLATFORM_ROOT := $(LITEOSTOPDIR)/../../device/qemu/arm/platform
+    LITEOS_BASELIB +=  -lcfiflash
+    LIB_SUBDIRS    += $(LITEOS_SOURCE_ROOT)/device/qemu/arm/$(LITEOS_PLATFORM)/config/cfiflash
+
 else
     $(error "No valid vendor paths added to LIB_SUBDIRS")
 endif
