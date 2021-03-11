@@ -11,21 +11,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include $(LITEOSTOPDIR)/config.mk
-include $(LITEOSTOPDIR)/../../drivers/adapter/khdf/liteos/lite.mk
+import("//build/lite/config/component/lite_component.gni")
 
-MODULE_NAME := hdf_uart_sample
-
-LOCAL_CFLAGS += $(HDF_INCLUDE)
-
-LOCAL_SRCS += src/uart_sample.c \
-              src/uart_pl011_sample.c \
-              src/buf_fifo.c \
-              src/uart_dev_sample.c \
-              src/uart_dispatch_sample.c \
-
-LOCAL_INCLUDE := ./include
-LOCAL_CFLAGS += -fstack-protector-strong
-
-include $(HDF_DRIVER)
-
+lite_component("hello_gpio_sample") {
+  features = [ "dispatch:hello_gpio_dispatch" ]
+}

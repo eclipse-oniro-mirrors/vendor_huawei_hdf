@@ -18,7 +18,7 @@
 #include <fcntl.h>
 #include "hdf_log.h"
 
-#define HDF_LOG_TAG "hello_uart"
+#define HDF_LOG_TAG hello_uart
 #define INFO_SIZE 16
 
 int main(void)
@@ -29,16 +29,16 @@ int main(void)
 
     fd = open("/dev/uartdev-5", O_RDWR);
     if (fd < 0) {
-        HDF_LOGE("hello_uart uartdev-5 open failed %d", fd);
+        HDF_LOGE("uartdev-5 open failed %{public}d", fd);
         return -1;
     }
     ret = write(fd, info, INFO_SIZE);
     if (ret != 0) {
-        HDF_LOGE("hello_uart write uartdev-5 ret is %d", ret);
+        HDF_LOGE("write uartdev-5 ret is %{public}d", ret);
     }
     ret = close(fd);
     if (ret != 0) {
-        HDF_LOGE("hello_uart uartdev-5 close failed %d", fd);
+        HDF_LOGE("uartdev-5 close failed %{public}d", fd);
         return -1;
     }
     return ret;

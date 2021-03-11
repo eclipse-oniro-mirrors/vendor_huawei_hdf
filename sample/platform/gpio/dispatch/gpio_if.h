@@ -13,31 +13,37 @@
  * limitations under the License.
  */
 
-#ifndef BUF_FIFO_H
-#define BUF_FIFO_H
+#ifndef GPIO_IF_H
+#define GPIO_IF_H
 
 #include <stdint.h>
-#include <stdlib.h>
-#include <stdbool.h>
 
-struct BufferFifo {
-    volatile uint32_t readPosition;
-    volatile uint32_t writePosition;
-    uint16_t bufSizeMask;
-    uint8_t *buffer;
+#define GPIO_SERVICE_NAME "GPIO_SAMPLE"
+
+enum GpioValue {
+    GPIO_VAL_LOW = 0,
+    GPIO_VAL_HIGH = 1,
+    GPIO_VAL_ERR,
 };
 
-static inline uint16_t BufferFifoGetDataSize(struct BufferFifo *fifo)
-{
-    return (fifo->writePosition - fifo->readPosition);
-}
+enum GpioDirType {
+    GPIO_DIR_IN = 0,
+    GPIO_DIR_OUT = 1,
+    GPIO_DIR_ERR,
+};
 
-static inline bool IsPowerOfTwo(int num)
-{
-    return (num > 0) && (num & (num - 1)) == 0;
-}
+enum GpioOps {
+    GPIO_OPS_SET_DIR = 1,
+    GPIO_OPS_GET_DIR,
+    GPIO_OPS_WRITE,
+    GPIO_OPS_READ
+};
 
-bool BufferFifoInit(struct BufferFifo *fifo, uint8_t *buf, uint16_t bufSize);
+int32_t GpioOpen();
+int32_t GpioClose();
+int32_t GpioSetDir(uint16_t gpio, uint16_t dir);
+int32_t GpioGetDir(uint16_t gpio, uint16_t *dir);
+int32_t GpioWrite(uint16_t gpio, uint16_t val);
+int32_t GpioRead(uint16_t gpio, uint16_t *val);
 
-#endif // BUF_FIFO_H
-
+#endif // GPIO_IF_H

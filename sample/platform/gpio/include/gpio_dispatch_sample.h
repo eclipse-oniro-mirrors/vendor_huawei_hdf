@@ -13,31 +13,18 @@
  * limitations under the License.
  */
 
-#ifndef BUF_FIFO_H
-#define BUF_FIFO_H
+#ifndef GPIO_DISPATCH_SAMPLE_H
+#define GPIO_DISPATCH_SAMPLE_H
 
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdbool.h>
+#include "gpio_pl061_sample.h"
 
-struct BufferFifo {
-    volatile uint32_t readPosition;
-    volatile uint32_t writePosition;
-    uint16_t bufSizeMask;
-    uint8_t *buffer;
+enum GpioOps {
+    GPIO_OPS_SET_DIR = 1,
+    GPIO_OPS_GET_DIR,
+    GPIO_OPS_WRITE,
+    GPIO_OPS_READ
 };
 
-static inline uint16_t BufferFifoGetDataSize(struct BufferFifo *fifo)
-{
-    return (fifo->writePosition - fifo->readPosition);
-}
+int32_t SampleGpioDispatch(struct HdfDeviceIoClient *client, int cmdId, struct HdfSBuf *data, struct HdfSBuf *reply);
 
-static inline bool IsPowerOfTwo(int num)
-{
-    return (num > 0) && (num & (num - 1)) == 0;
-}
-
-bool BufferFifoInit(struct BufferFifo *fifo, uint8_t *buf, uint16_t bufSize);
-
-#endif // BUF_FIFO_H
-
+#endif // GPIO_DISPATCH_SAMPLE_H

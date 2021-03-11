@@ -14,15 +14,13 @@
 include $(LITEOSTOPDIR)/config.mk
 include $(LITEOSTOPDIR)/../../drivers/adapter/khdf/liteos/lite.mk
 
-MODULE_NAME := hdf_uart_sample
+MODULE_NAME := hdf_gpio_sample
 
 LOCAL_CFLAGS += $(HDF_INCLUDE)
 
-LOCAL_SRCS += src/uart_sample.c \
-              src/uart_pl011_sample.c \
-              src/buf_fifo.c \
-              src/uart_dev_sample.c \
-              src/uart_dispatch_sample.c \
+LOCAL_SRCS += src/gpio_sample.c \
+              src/gpio_pl061_sample.c \
+              src/gpio_dispatch_sample.c \
 
 LOCAL_INCLUDE := ./include
 LOCAL_CFLAGS += -fstack-protector-strong

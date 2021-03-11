@@ -19,6 +19,8 @@
 #include "osal_mem.h"
 #include "hdf_io_service_if.h"
 
+#define HDF_LOG_TAG uart_if
+
 struct DevHandle *UartOpen(uint32_t port)
 {
     int32_t ret;
@@ -45,9 +47,9 @@ struct DevHandle *UartOpen(uint32_t port)
         return NULL;
     }
 
-    struct HdfIoService *service = HdfIoServiceBind(serviceName, 0);
+    struct HdfIoService *service = HdfIoServiceBind(serviceName);
     if (service == NULL) {
-        HDF_LOGE("Failed to get service %s", serviceName);
+        HDF_LOGE("Failed to get service %{public}s", serviceName);
         OsalMemFree(handle);
         OsalMemFree(serviceName);
         return NULL;

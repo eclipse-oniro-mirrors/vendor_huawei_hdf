@@ -13,31 +13,34 @@
  * limitations under the License.
  */
 
-#ifndef BUF_FIFO_H
-#define BUF_FIFO_H
+#ifndef SPI_IF_H
+#define SPI_IF_H
 
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdbool.h>
+#include "hdf_platform.h"
 
-struct BufferFifo {
-    volatile uint32_t readPosition;
-    volatile uint32_t writePosition;
-    uint16_t bufSizeMask;
-    uint8_t *buffer;
+#define SPI_DEV_SERVICE_NAME_PREFIX "HDF_PLATFORM_SPI_%u"
+#define MAX_DEV_NAME_SIZE 32
+
+struct SpiDevInfo {
+    uint32_t busNum;
+    uint32_t csNum;
 };
 
-static inline uint16_t BufferFifoGetDataSize(struct BufferFifo *fifo)
-{
-    return (fifo->writePosition - fifo->readPosition);
-}
+struct SpiMsg {
+    uint8_t *wbuf;
+    uint8_t *rbuf;
+    uint32_t len;
+    uint32_t speed;
+    uint16_t delayUs;
+    uint8_t csChange;
+};
 
-static inline bool IsPowerOfTwo(int num)
-{
-    return (num > 0) && (num & (num - 1)) == 0;
-}
+enum {
+    SPI_TRANSFER = 1
+};
 
-bool BufferFifoInit(struct BufferFifo *fifo, uint8_t *buf, uint16_t bufSize);
+DevHandle SpiOpen(const struct SpiDevInfo *info);
+void SpiClose(DevHandle handle);
+int32_t SpiTransfer(DevHandle handle, struct SpiMsg *msgs);
 
-#endif // BUF_FIFO_H
-
+#endif // SPI_IF_H

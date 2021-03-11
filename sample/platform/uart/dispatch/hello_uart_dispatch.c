@@ -18,7 +18,7 @@
 #include "osal_mem.h"
 #include "uart_if.h"
 
-#define HDF_LOG_TAG "hello_uart_dispatch"
+#define HDF_LOG_TAG hello_uart_dispatch
 #define UART_PORT 5
 
 int main()
@@ -27,7 +27,7 @@ int main()
 
     struct DevHandle *handle = UartOpen(UART_PORT);
     if (handle == NULL) {
-        HDF_LOGE("Failed to open uart %d", UART_PORT);
+        HDF_LOGE("Failed to open uart %{public}d", UART_PORT);
         return HDF_FAILURE;
     }
 

@@ -13,8 +13,11 @@
 
 HDF_FRAMEWORKS = "//drivers/framework"
 
-executable("hello_uart") {
-  sources = [ "hello_uart_dev.c" ]
+executable("hello_gpio_dispatch") {
+  sources = [
+    "gpio_if.c",
+    "hello_gpio_dispatch.c",
+  ]
 
   include_dirs = [
     "$HDF_FRAMEWORKS/ability/sbuf/include",

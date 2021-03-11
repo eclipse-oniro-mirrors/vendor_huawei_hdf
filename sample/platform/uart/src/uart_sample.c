@@ -70,9 +70,9 @@ struct UartHostMethod g_sampleUartHostMethod = {
 /* UartHostMethod implementations */
 static int32_t SampleUartHostInit(struct UartHost *host)
 {
-    HDF_LOGI("%s: Enter", __func__);
+    HDF_LOGD("%{public}s: Enter", __func__);
     if (host == NULL) {
-        HDF_LOGE("%s: invalid parameter", __func__);
+        HDF_LOGW("%{public}s: invalid parameter", __func__);
         return HDF_ERR_INVALID_PARAM;
     }
     return HDF_SUCCESS;
@@ -80,9 +80,9 @@ static int32_t SampleUartHostInit(struct UartHost *host)
 
 static int32_t SampleUartHostDeinit(struct UartHost *host)
 {
-    HDF_LOGI("%s: Enter", __func__);
+    HDF_LOGD("%{public}s: Enter", __func__);
     if (host == NULL) {
-        HDF_LOGE("%s: invalid parameter", __func__);
+        HDF_LOGW("%{public}s: invalid parameter", __func__);
         return HDF_ERR_INVALID_PARAM;
     }
     return HDF_SUCCESS;
@@ -90,18 +90,18 @@ static int32_t SampleUartHostDeinit(struct UartHost *host)
 
 static int32_t SampleUartHostWrite(struct UartHost *host, uint8_t *data, uint32_t size)
 {
-    HDF_LOGI("%s: Enter", __func__);
     uint32_t idx;
     struct UartRegisterMap *regMap = NULL;
     struct UartDevice *device = NULL;
+    HDF_LOGD("%{public}s: Enter", __func__);
 
     if (host == NULL || data == NULL || size == 0) {
-        HDF_LOGE("%s: invalid parameter", __func__);
+        HDF_LOGW("%{public}s: invalid parameter", __func__);
         return HDF_ERR_INVALID_PARAM;
     }
     device = (struct UartDevice *)host->priv;
     if (device == NULL) {
-        HDF_LOGE("%s: device is NULL", __func__);
+        HDF_LOGW("%{public}s: device is NULL", __func__);
         return HDF_ERR_INVALID_PARAM;
     }
     regMap = (struct UartRegisterMap *)device->resource.physBase;
@@ -113,18 +113,18 @@ static int32_t SampleUartHostWrite(struct UartHost *host, uint8_t *data, uint32_
 
 static int32_t SampleUartHostSetBaud(struct UartHost *host, uint32_t baudRate)
 {
-    HDF_LOGI("%s: Enter", __func__);
     struct UartDevice *device = NULL;
     struct UartRegisterMap *regMap = NULL;
     UartPl011Error err;
+    HDF_LOGD("%{public}s: Enter", __func__);
 
     if (host == NULL) {
-        HDF_LOGE("%s: invalid parameter", __func__);
+        HDF_LOGW("%{public}s: invalid parameter", __func__);
         return HDF_ERR_INVALID_PARAM;
     }
     device = (struct UartDevice *)host->priv;
     if (device == NULL) {
-        HDF_LOGE("%s: device is NULL", __func__);
+        HDF_LOGW("%{public}s: device is NULL", __func__);
         return HDF_ERR_INVALID_PARAM;
     }
     regMap = (struct UartRegisterMap *)device->resource.physBase;
@@ -143,16 +143,16 @@ static int32_t SampleUartHostSetBaud(struct UartHost *host, uint32_t baudRate)
 
 static int32_t SampleUartHostGetBaud(struct UartHost *host, uint32_t *baudRate)
 {
-    HDF_LOGI("%s: Enter", __func__);
     struct UartDevice *device = NULL;
+    HDF_LOGD("%{public}s: Enter", __func__);
 
     if (host == NULL) {
-        HDF_LOGE("%s: invalid parameter", __func__);
+        HDF_LOGW("%{public}s: invalid parameter", __func__);
         return HDF_ERR_INVALID_PARAM;
     }
     device = (struct UartDevice *)host->priv;
     if (device == NULL) {
-        HDF_LOGE("%s: device is NULL", __func__);
+        HDF_LOGW("%{public}s: device is NULL", __func__);
         return HDF_ERR_INVALID_PARAM;
     }
     *baudRate = device->baudrate;
@@ -243,12 +243,12 @@ static int32_t AttachUartDevice(struct UartHost *host, struct HdfDeviceObject *d
     int32_t ret;
     struct UartDevice *uartDevice = NULL;
     if (device->property == NULL) {
-        HDF_LOGE("%s: property is NULL", __func__);
+        HDF_LOGW("%{public}s: property is NULL", __func__);
         return HDF_FAILURE;
     }
     uartDevice = (struct UartDevice *)OsalMemCalloc(sizeof(struct UartDevice));
     if (uartDevice == NULL) {
-        HDF_LOGE("%s: OsalMemCalloc uartDevice error", __func__);
+        HDF_LOGE("%{public}s: OsalMemCalloc uartDevice error", __func__);
         return HDF_ERR_MALLOC_FAIL;
     }
     ret = GetUartDeviceResource(uartDevice, device->property);
@@ -278,7 +278,7 @@ static void DetachUartDevice(struct UartHost *host)
     struct UartDevice *uartDevice = NULL;
 
     if (host->priv == NULL) {
-        HDF_LOGE("%s: invalid parameter", __func__);
+        HDF_LOGW("%{public}s: invalid parameter", __func__);
         return;
     }
     uartDevice = host->priv;
@@ -291,15 +291,15 @@ static void DetachUartDevice(struct UartHost *host)
 static int32_t SampleUartDriverBind(struct HdfDeviceObject *device)
 {
     struct UartHost *uartHost = NULL;
+    HDF_LOGD("%{public}s: Enter", __func__);
 
     if (device == NULL) {
         return HDF_ERR_INVALID_OBJECT;
     }
-    HDF_LOGI("Enter %s:", __func__);
 
     uartHost = UartHostCreate(device);
     if (uartHost == NULL) {
-        HDF_LOGE("%s: UartHostCreate failed", __func__);
+        HDF_LOGE("%{public}s: UartHostCreate failed", __func__);
         return HDF_FAILURE;
     }
     uartHost->service.Dispatch = SampleDispatch;
@@ -310,20 +310,20 @@ static int32_t SampleUartDriverInit(struct HdfDeviceObject *device)
 {
     int32_t ret;
     struct UartHost *host = NULL;
+    HDF_LOGD("%{public}s: Enter", __func__);
 
     if (device == NULL) {
-        HDF_LOGE("%s: device is NULL", __func__);
+        HDF_LOGE("%{public}s: device is NULL", __func__);
         return HDF_ERR_INVALID_OBJECT;
     }
-    HDF_LOGI("Enter %s:", __func__);
     host = UartHostFromDevice(device);
     if (host == NULL) {
-        HDF_LOGE("%s: host is NULL", __func__);
+        HDF_LOGE("%{public}s: host is NULL", __func__);
         return HDF_FAILURE;
     }
     ret = AttachUartDevice(host, device);
     if (ret != HDF_SUCCESS) {
-        HDF_LOGE("%s: attach error", __func__);
+        HDF_LOGE("%{public}s: attach error", __func__);
         return HDF_FAILURE;
     }
     host->method = &g_sampleUartHostMethod;
@@ -333,15 +333,15 @@ static int32_t SampleUartDriverInit(struct HdfDeviceObject *device)
 static void SampleUartDriverRelease(struct HdfDeviceObject *device)
 {
     struct UartHost *host = NULL;
-    HDF_LOGI("Enter %s:", __func__);
+    HDF_LOGD("%{public}s: Enter", __func__);
 
     if (device == NULL) {
-        HDF_LOGE("%s: device is NULL", __func__);
+        HDF_LOGE("%{public}s: device is NULL", __func__);
         return;
     }
     host = UartHostFromDevice(device);
     if (host == NULL) {
-        HDF_LOGE("%s: host is NULL", __func__);
+        HDF_LOGE("%{public}s: host is NULL", __func__);
         return;
     }
     if (host->priv != NULL) {

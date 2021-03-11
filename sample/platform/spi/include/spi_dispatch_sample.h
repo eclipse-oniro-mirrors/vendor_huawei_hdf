@@ -13,31 +13,16 @@
  * limitations under the License.
  */
 
-#ifndef BUF_FIFO_H
-#define BUF_FIFO_H
+#ifndef SPI_DISPATCH_SAMPLE_H
+#define SPI_DISPATCH_SAMPLE_H
 
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdbool.h>
+#include "spi_pl022_sample.h"
+#include "spi_core.h"
 
-struct BufferFifo {
-    volatile uint32_t readPosition;
-    volatile uint32_t writePosition;
-    uint16_t bufSizeMask;
-    uint8_t *buffer;
+enum {
+    SPI_TRANSFER = 1
 };
 
-static inline uint16_t BufferFifoGetDataSize(struct BufferFifo *fifo)
-{
-    return (fifo->writePosition - fifo->readPosition);
-}
+int32_t SampleSpiDispatch(struct HdfDeviceIoClient *client, int cmdId, struct HdfSBuf *data, struct HdfSBuf *reply);
 
-static inline bool IsPowerOfTwo(int num)
-{
-    return (num > 0) && (num & (num - 1)) == 0;
-}
-
-bool BufferFifoInit(struct BufferFifo *fifo, uint8_t *buf, uint16_t bufSize);
-
-#endif // BUF_FIFO_H
-
+#endif // SPI_DISPATCH_SAMPLE_H

@@ -13,8 +13,11 @@
 
 HDF_FRAMEWORKS = "//drivers/framework"
 
-executable("hello_uart") {
-  sources = [ "hello_uart_dev.c" ]
+executable("hello_spi_dispatch") {
+  sources = [
+    "hello_spi_dispatch.c",
+    "spi_if.c",
+  ]
 
   include_dirs = [
     "$HDF_FRAMEWORKS/ability/sbuf/include",
@@ -22,6 +25,7 @@ executable("hello_uart") {
     "$HDF_FRAMEWORKS/core/host/include",
     "$HDF_FRAMEWORKS/core/master/include",
     "$HDF_FRAMEWORKS/include/core",
+    "$HDF_FRAMEWORKS/include/platform",
     "$HDF_FRAMEWORKS/include/utils",
     "$HDF_FRAMEWORKS/utils/include",
     "$HDF_FRAMEWORKS/include/osal",
