@@ -30,12 +30,12 @@ static int32_t SampleDispatchWrite(struct UartDevice *device, struct HdfSBuf *tx
     struct UartRegisterMap *regMap = (struct UartRegisterMap *)device->resource.physBase;
 
     if (regMap == NULL) {
-        HDF_LOGE("%{public}s: regMap is NULL", __func__);
+        HDF_LOGE("%s: regMap is NULL", __func__);
         return HDF_FAILURE;
     }
 
     if (!HdfSbufReadBuffer(txBuf, (const void **)&data, &dataSize)) {
-        HDF_LOGE("%{public}s: Failed to read sbuf", __func__);
+        HDF_LOGE("%s: Failed to read sbuf", __func__);
         return HDF_FAILURE;
     }
     regMap = (struct UartRegisterMap *)device->resource.physBase;
@@ -49,17 +49,17 @@ int32_t SampleDispatch(struct HdfDeviceIoClient *client, int cmdId, struct HdfSB
 {
     int32_t result = HDF_FAILURE;
     if (client == NULL || client->device == NULL) {
-        HDF_LOGE("%{public}s: client or client->device is NULL", __func__);
+        HDF_LOGE("%s: client or client->device is NULL", __func__);
         return result;
     }
     struct UartHost *uartHost = (struct UartHost *)client->device->service;
     if (uartHost == NULL) {
-        HDF_LOGE("%{public}s: uartHost is NULL", __func__);
+        HDF_LOGE("%s: uartHost is NULL", __func__);
         return result;
     }
     struct UartDevice *uartDevice = (struct UartDevice *)uartHost->priv;
     if (uartDevice == NULL) {
-        HDF_LOGE("%{public}s: uartDevice is NULL", __func__);
+        HDF_LOGE("%s: uartDevice is NULL", __func__);
         return result;
     }
     switch (cmdId) {

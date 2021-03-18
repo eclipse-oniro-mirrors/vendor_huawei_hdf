@@ -49,7 +49,7 @@ struct DevHandle *UartOpen(uint32_t port)
 
     struct HdfIoService *service = HdfIoServiceBind(serviceName);
     if (service == NULL) {
-        HDF_LOGE("Failed to get service %{public}s", serviceName);
+        HDF_LOGE("Failed to get service %s", serviceName);
         OsalMemFree(handle);
         OsalMemFree(serviceName);
         return NULL;
