@@ -43,13 +43,13 @@ int ConfigPl022SpiCntlr(struct Pl022SpiCntlr *cntlr)
     }
     /* Min possible */
     if ((cntlr->speed < cntlr->minSpeedHz) || (cntlr->speed == 0)) {
-        HDF_LOGE("%{public}s: cntlr->speed is %{public}u not support, max %{public}u, min %{public}u", __func__,
+        HDF_LOGE("%s: cntlr->speed is %u not support, max %u, min %u", __func__,
                  cntlr->speed, cntlr->maxSpeedHz, cntlr->minSpeedHz);
         return HDF_FAILURE;
     }
     /* Check if we can provide the requested bits_per_word */
     if ((cntlr->bitsPerWord < BITS_PER_WORD_MIN) || (cntlr->bitsPerWord > BITS_PER_WORD_MAX)) {
-        HDF_LOGE("%{public}s: cntlr->bitsPerWord is %{public}u not support", __func__, cntlr->bitsPerWord);
+        HDF_LOGE("%s: cntlr->bitsPerWord is %u not support", __func__, cntlr->bitsPerWord);
         return HDF_FAILURE;
     }
     /* compute spi speed, speed=clk/(cpsdvsr*(scr+1)) */
@@ -133,7 +133,7 @@ static int Pl022SampleFlushFifo(const struct Pl022SpiCntlr *cntlr)
             break;
         }
         if (tmp++ > cntlr->fifoSize) {
-            HDF_LOGE("%{public}s: spi transfer check rx fifo wait timeout", __func__);
+            HDF_LOGE("%s: spi transfer check rx fifo wait timeout", __func__);
             return HDF_ERR_TIMEOUT;
         }
         OSAL_READL((UINTPTR)(cntlr->regBase) + REG_SPI_PL022_DR);
@@ -301,7 +301,7 @@ static int32_t Pl022SampleCfgCs(struct Pl022SpiCntlr *cntlr, uint32_t cs)
     uint32_t miscCtrlCs;
 
     if ((cs + 1) > cntlr->numCs) {
-        HDF_LOGE("%{public}s: cs %{public}u is big than cntlr csNum %{public}u", __func__, cs, cntlr->numCs);
+        HDF_LOGE("%s: cs %u is big than cntlr csNum %u", __func__, cs, cntlr->numCs);
         return HDF_FAILURE;
     }
     if (cntlr->numCs == 1) {
@@ -335,7 +335,7 @@ static int Pl022SampleCheckTimeout(const struct Pl022SpiCntlr *cntlr)
             break;
         }
         if (tmp++ > MAX_WAIT) {
-            HDF_LOGE("%{public}s: spi transfer wait timeout", __func__);
+            HDF_LOGE("%s: spi transfer wait timeout", __func__);
             return HDF_ERR_TIMEOUT;
         }
         OsalUDelay(1);

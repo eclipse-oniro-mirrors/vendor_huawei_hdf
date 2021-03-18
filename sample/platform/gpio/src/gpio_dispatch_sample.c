@@ -22,11 +22,11 @@ static int32_t SampleGpioSetDir(struct GpioCntlr *cntlr, struct HdfSBuf *data)
     uint16_t gpio;
     uint16_t dir;
     if (!HdfSbufReadUint16(data, &gpio) || !HdfSbufReadUint16(data, &dir)) {
-        HDF_LOGE("%{public}s: HdfSbufReadUint16 failed", __func__);
+        HDF_LOGE("%s: HdfSbufReadUint16 failed", __func__);
         return HDF_ERR_INVALID_PARAM;
     }
     if (cntlr->ops->setDir == NULL) {
-        HDF_LOGE("%{public}s: cntlr->ops->setDir is NULL", __func__);
+        HDF_LOGE("%s: cntlr->ops->setDir is NULL", __func__);
         return HDF_DEV_ERR_OP;
     }
     return cntlr->ops->setDir(cntlr, gpio, dir);
@@ -38,20 +38,20 @@ static int32_t SampleGpioGetDir(struct GpioCntlr *cntlr, struct HdfSBuf *data, s
     uint16_t gpio;
     uint16_t dir;
     if (!HdfSbufReadUint16(data, &gpio)) {
-        HDF_LOGE("%{public}s: HdfSbufReadUint16 failed", __func__);
+        HDF_LOGE("%s: HdfSbufReadUint16 failed", __func__);
         return HDF_ERR_INVALID_PARAM;
     }
     if (cntlr->ops->getDir == NULL) {
-        HDF_LOGE("%{public}s: cntlr->ops->getDir is NULL", __func__);
+        HDF_LOGE("%s: cntlr->ops->getDir is NULL", __func__);
         return HDF_DEV_ERR_OP;
     }
     ret = cntlr->ops->getDir(cntlr, gpio, &dir);
     if (ret != HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: cntlr->ops->getDir failed, ret: %{public}d", __func__, ret);
+        HDF_LOGE("%s: cntlr->ops->getDir failed, ret: %d", __func__, ret);
         return ret;
     }
     if (!HdfSbufWriteUint16(reply, dir)) {
-        HDF_LOGE("%{public}s: HdfSbufWriteUint16 failed", __func__);
+        HDF_LOGE("%s: HdfSbufWriteUint16 failed", __func__);
         return HDF_FAILURE;
     }
     return HDF_SUCCESS;
@@ -62,11 +62,11 @@ static int32_t SampleGpioWrite(struct GpioCntlr *cntlr, struct HdfSBuf *data)
     uint16_t gpio;
     uint16_t val;
     if (!HdfSbufReadUint16(data, &gpio) || !HdfSbufReadUint16(data, &val)) {
-        HDF_LOGE("%{public}s: HdfSbufReadUint16 failed", __func__);
+        HDF_LOGE("%s: HdfSbufReadUint16 failed", __func__);
         return HDF_ERR_INVALID_PARAM;
     }
     if (cntlr->ops->write == NULL) {
-        HDF_LOGE("%{public}s: cntlr->ops->read is NULL", __func__);
+        HDF_LOGE("%s: cntlr->ops->read is NULL", __func__);
         return HDF_DEV_ERR_OP;
     }
     return cntlr->ops->write(cntlr, gpio, val);
@@ -78,20 +78,20 @@ static int32_t SampleGpioRead(struct GpioCntlr *cntlr, struct HdfSBuf *data, str
     uint16_t gpio;
     uint16_t val;
     if (!HdfSbufReadUint16(data, &gpio)) {
-        HDF_LOGE("%{public}s: HdfSbufReadUint16 failed", __func__);
+        HDF_LOGE("%s: HdfSbufReadUint16 failed", __func__);
         return HDF_ERR_INVALID_PARAM;
     }
     if (cntlr->ops->read == NULL) {
-        HDF_LOGE("%{public}s: cntlr->ops->read is NULL", __func__);
+        HDF_LOGE("%s: cntlr->ops->read is NULL", __func__);
         return HDF_DEV_ERR_OP;
     }
     ret = cntlr->ops->read(cntlr, gpio, &val);
     if (ret != HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: cntlr->ops->read failed, ret: %{public}d", __func__, ret);
+        HDF_LOGE("%s: cntlr->ops->read failed, ret: %d", __func__, ret);
         return ret;
     }
     if (!HdfSbufWriteUint16(reply, val)) {
-        HDF_LOGE("%{public}s: HdfSbufWriteUint16 failed", __func__);
+        HDF_LOGE("%s: HdfSbufWriteUint16 failed", __func__);
         return HDF_FAILURE;
     }
     return HDF_SUCCESS;
@@ -100,13 +100,13 @@ static int32_t SampleGpioRead(struct GpioCntlr *cntlr, struct HdfSBuf *data, str
 int32_t SampleGpioDispatch(struct HdfDeviceIoClient *client, int cmdId, struct HdfSBuf *data, struct HdfSBuf *reply)
 {
     if (client == NULL || client->device == NULL) {
-        HDF_LOGE("%{public}s: client or client->device is NULL", __func__);
+        HDF_LOGE("%s: client or client->device is NULL", __func__);
         return HDF_ERR_INVALID_PARAM;
     }
 
     struct GpioCntlr *cntlr = (struct GpioCntlr *)client->device->service;
     if (cntlr == NULL || cntlr->ops == NULL) {
-        HDF_LOGE("%{public}s: cntlr or cntlr->ops is NULL", __func__);
+        HDF_LOGE("%s: cntlr or cntlr->ops is NULL", __func__);
         return HDF_ERR_INVALID_PARAM;
     }
 
@@ -120,7 +120,7 @@ int32_t SampleGpioDispatch(struct HdfDeviceIoClient *client, int cmdId, struct H
         case GPIO_OPS_READ:
             return SampleGpioRead(cntlr, data, reply);
         default:
-            HDF_LOGE("%{public}s: invalid cmdId %{public}d", __func__, cmdId);
+            HDF_LOGE("%s: invalid cmdId %d", __func__, cmdId);
             return HDF_FAILURE;
     }
 }

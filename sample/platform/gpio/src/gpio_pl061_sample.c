@@ -24,12 +24,12 @@ int32_t Pl061GetGroupByGpioNum(struct GpioCntlr *cntlr, uint16_t gpio, struct Gp
     uint16_t groupIndex = Pl061ToGroupNum(gpio);
 
     if (cntlr == NULL) {
-        HDF_LOGE("%{public}s: cntlr is NULL", __func__);
+        HDF_LOGE("%s: cntlr is NULL", __func__);
         return HDF_ERR_INVALID_OBJECT;
     }
     pl061 = ToPl061GpioCntlr(cntlr);
     if (groupIndex >= pl061->groupNum) {
-        HDF_LOGE("%{public}s: err group index:%{public}u", __func__, groupIndex);
+        HDF_LOGE("%s: err group index:%u", __func__, groupIndex);
         return HDF_ERR_INVALID_PARAM;
     }
     *group = &pl061->groups[groupIndex];
