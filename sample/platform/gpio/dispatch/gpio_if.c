@@ -28,7 +28,7 @@ static struct HdfIoService *GetIoService()
 
     ioService = HdfIoServiceBind(GPIO_SERVICE_NAME);
     if (ioService == NULL) {
-        HDF_LOGE("Failed to get service %{public}s", GPIO_SERVICE_NAME);
+        HDF_LOGE("Failed to get service %s", GPIO_SERVICE_NAME);
     }
     return ioService;
 }
@@ -53,7 +53,7 @@ static int32_t GpioOperate(enum GpioOps ops, uint16_t gpio, uint16_t val)
     }
     ret = service->dispatcher->Dispatch(&service->object, ops, data, NULL);
     if (ret != HDF_SUCCESS) {
-        HDF_LOGE("Failed to send service call, ret: %{public}d", ret);
+        HDF_LOGE("Failed to send service call, ret: %d", ret);
     }
     HdfSBufRecycle(data);
     return ret;

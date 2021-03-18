@@ -60,16 +60,16 @@ static struct SpiDev *FindDeviceByCsNum(const struct Pl022SpiCntlr *pl022Cntlr, 
 /* HdfDriverEntry hook function implementations */
 static int32_t SampleSpiDriverBind(struct HdfDeviceObject *device)
 {
-    HDF_LOGD("%{public}s: Enter", __func__);
+    HDF_LOGD("%s: Enter", __func__);
     struct SpiCntlr *cntlr = NULL;
     if (device == NULL) {
-        HDF_LOGE("%{public}s: device is NULL", __func__);
+        HDF_LOGE("%s: device is NULL", __func__);
         return HDF_ERR_INVALID_OBJECT;
     }
 
     cntlr = SpiCntlrCreate(device);
     if (cntlr == NULL) {
-        HDF_LOGE("%{public}s: cntlr is NULL", __func__);
+        HDF_LOGE("%s: cntlr is NULL", __func__);
         return HDF_FAILURE;
     }
 
@@ -79,26 +79,26 @@ static int32_t SampleSpiDriverBind(struct HdfDeviceObject *device)
 
 static int32_t SampleSpiDriverInit(struct HdfDeviceObject *device)
 {
-    HDF_LOGD("%{public}s: Enter", __func__);
+    HDF_LOGD("%s: Enter", __func__);
     int ret;
     struct SpiCntlr *cntlr = NULL;
     if (device == NULL || device->property == NULL) {
-        HDF_LOGE("%{public}s: device or device->property is null", __func__);
+        HDF_LOGE("%s: device or device->property is null", __func__);
         return HDF_ERR_INVALID_OBJECT;
     }
     cntlr = SpiCntlrFromDevice(device);
     if (cntlr == NULL) {
-        HDF_LOGE("%{public}s: cntlr is null", __func__);
+        HDF_LOGE("%s: cntlr is null", __func__);
         return HDF_ERR_INVALID_OBJECT;
     }
     ret = InitSpiDevice(cntlr, device->property);
     if (ret != HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: InitSpiDevice failed", __func__);
+        HDF_LOGE("%s: InitSpiDevice failed", __func__);
         return ret;
     }
     ret = ConfigSpiDevice(cntlr->priv);
     if (ret != HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: ConfigSpiDevice failed", __func__);
+        HDF_LOGE("%s: ConfigSpiDevice failed", __func__);
         return ret;
     }
     return ret;
@@ -106,15 +106,15 @@ static int32_t SampleSpiDriverInit(struct HdfDeviceObject *device)
 
 static void SampleSpiDriverRelease(struct HdfDeviceObject *device)
 {
-    HDF_LOGD("%{public}s: Enter", __func__);
+    HDF_LOGD("%s: Enter", __func__);
     struct SpiCntlr *cntlr = NULL;
     if (device == NULL) {
-        HDF_LOGE("%{public}s: device is null", __func__);
+        HDF_LOGE("%s: device is null", __func__);
         return;
     }
     cntlr = SpiCntlrFromDevice(device);
     if (cntlr == NULL) {
-        HDF_LOGE("%{public}s: cntlr is null", __func__);
+        HDF_LOGE("%s: cntlr is null", __func__);
         return;
     }
     if (cntlr->priv != NULL) {
@@ -126,19 +126,19 @@ static void SampleSpiDriverRelease(struct HdfDeviceObject *device)
 /* SPI function implementations */
 int32_t SampleSpiCntlrTransfer(struct SpiCntlr *cntlr, struct SpiMsg *msg, uint32_t count)
 {
-    HDF_LOGD("%{public}s: Enter", __func__);
+    HDF_LOGD("%s: Enter", __func__);
     int ret;
     struct Pl022SpiCntlr *pl022Cntlr = NULL;
     struct SpiDev *spiDev = NULL;
 
     if (cntlr == NULL || cntlr->priv == NULL || msg == NULL || count == 0) {
-        HDF_LOGE("%{public}s: invalid parameter", __func__);
+        HDF_LOGE("%s: invalid parameter", __func__);
         return HDF_ERR_INVALID_PARAM;
     }
     pl022Cntlr = (struct Pl022SpiCntlr *)cntlr->priv;
     spiDev = FindDeviceByCsNum(pl022Cntlr, cntlr->curCs);
     if (spiDev == NULL) {
-        HDF_LOGE("%{public}s: spiDev is null, curCs %{public}u", __func__, cntlr->curCs);
+        HDF_LOGE("%s: spiDev is null, curCs %u", __func__, cntlr->curCs);
         return HDF_FAILURE;
     }
     pl022Cntlr->mode = spiDev->mode;
@@ -149,7 +149,7 @@ int32_t SampleSpiCntlrTransfer(struct SpiCntlr *cntlr, struct SpiMsg *msg, uint3
     for (uint32_t i = 0; i < count; i++) {
         ret = TransferOneMessage(pl022Cntlr, &(msg[i]));
         if (ret != HDF_SUCCESS) {
-            HDF_LOGE("%{public}s: transfer error", __func__);
+            HDF_LOGE("%s: transfer error", __func__);
             return ret;
         }
     }
@@ -158,25 +158,25 @@ int32_t SampleSpiCntlrTransfer(struct SpiCntlr *cntlr, struct SpiMsg *msg, uint3
 
 int32_t SampleSpiCntlrSetCfg(struct SpiCntlr *cntlr, struct SpiCfg *cfg)
 {
-    HDF_LOGD("%{public}s: Enter", __func__);
+    HDF_LOGD("%s: Enter", __func__);
     struct Pl022SpiCntlr *pl022Cntlr = NULL;
     struct SpiDev *spiDev = NULL;
 
     if (cntlr == NULL || cntlr->priv == NULL || cfg == NULL) {
-        HDF_LOGE("%{public}s: invalid parameter", __func__);
+        HDF_LOGE("%s: invalid parameter", __func__);
         return HDF_ERR_INVALID_PARAM;
     }
     pl022Cntlr = (struct Pl022SpiCntlr *)cntlr->priv;
     spiDev = FindDeviceByCsNum(pl022Cntlr, cntlr->curCs);
     if (spiDev == NULL) {
-        HDF_LOGE("%{public}s: spiDev is null, curCs %{public}u", __func__, cntlr->curCs);
+        HDF_LOGE("%s: spiDev is null, curCs %u", __func__, cntlr->curCs);
         return HDF_FAILURE;
     }
     spiDev->mode = cfg->mode;
     spiDev->transferMode = cfg->transferMode;
     spiDev->bitsPerWord = cfg->bitsPerWord;
     if ((cfg->bitsPerWord < BITS_PER_WORD_MIN) || (cfg->bitsPerWord > BITS_PER_WORD_MAX)) {
-        HDF_LOGE("%{public}s: bitsPerWord %{public}u not support, use default bitsPerWord %{public}u",
+        HDF_LOGE("%s: bitsPerWord %u not support, use default bitsPerWord %u",
                  __func__, cfg->bitsPerWord, BITS_PER_WORD_DEFAULT);
         spiDev->bitsPerWord = BITS_PER_WORD_DEFAULT;
     }
@@ -188,18 +188,18 @@ int32_t SampleSpiCntlrSetCfg(struct SpiCntlr *cntlr, struct SpiCfg *cfg)
 
 int32_t SampleSpiCntlrGetCfg(struct SpiCntlr *cntlr, struct SpiCfg *cfg)
 {
-    HDF_LOGD("%{public}s: Enter", __func__);
+    HDF_LOGD("%s: Enter", __func__);
     struct Pl022SpiCntlr *pl022Cntlr = NULL;
     struct SpiDev *spiDev = NULL;
 
     if (cntlr == NULL || cntlr->priv == NULL || cfg == NULL) {
-        HDF_LOGE("%{public}s: invalid parameter", __func__);
+        HDF_LOGE("%s: invalid parameter", __func__);
         return HDF_ERR_INVALID_PARAM;
     }
     pl022Cntlr = (struct Pl022SpiCntlr *)cntlr->priv;
     spiDev = FindDeviceByCsNum(pl022Cntlr, cntlr->curCs);
     if (spiDev == NULL) {
-        HDF_LOGE("%{public}s: spiDev is null, curCs %{public}u", __func__, cntlr->curCs);
+        HDF_LOGE("%s: spiDev is null, curCs %u", __func__, cntlr->curCs);
         return HDF_FAILURE;
     }
     cfg->mode = spiDev->mode;
@@ -217,12 +217,12 @@ static int InitSpiDevice(struct SpiCntlr *cntlr, const struct DeviceResourceNode
 
     pl022Cntlr = (struct Pl022SpiCntlr *)OsalMemCalloc(sizeof(*pl022Cntlr));
     if (pl022Cntlr == NULL) {
-        HDF_LOGE("%{public}s: OsalMemCalloc error", __func__);
+        HDF_LOGE("%s: OsalMemCalloc error", __func__);
         return HDF_FAILURE;
     }
     ret = InitSpiDeviceResource(pl022Cntlr, property);
     if (ret != HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: InitSpiDeviceResource error", __func__);
+        HDF_LOGE("%s: InitSpiDeviceResource error", __func__);
         OsalMemFree(pl022Cntlr);
         return HDF_FAILURE;
     }
@@ -247,7 +247,7 @@ static int ConfigSpiDevice(struct Pl022SpiCntlr *pl022Cntlr)
 
     ret = ConfigPl022SpiCntlr(pl022Cntlr);
     if (ret != HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: HiPl022Config error", __func__);
+        HDF_LOGE("%s: HiPl022Config error", __func__);
     }
     return ret;
 }
@@ -259,44 +259,44 @@ static int32_t InitSpiDeviceResource(struct Pl022SpiCntlr *pl022Cntlr, const str
 
     resIf = DeviceResourceGetIfaceInstance(HDF_CONFIG_SOURCE);
     if (resIf == NULL || resIf->GetUint8 == NULL || resIf->GetUint16 == NULL || resIf->GetUint32 == NULL) {
-        HDF_LOGE("%{public}s: resource is invalid", __func__);
+        HDF_LOGE("%s: resource is invalid", __func__);
         return HDF_FAILURE;
     }
     if (resIf->GetUint32(node, "regBase", &tmp, 0) != HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: read regBase fail", __func__);
+        HDF_LOGE("%s: read regBase fail", __func__);
         return HDF_FAILURE;
     }
     pl022Cntlr->regBase = (void *)(uintptr_t)(IO_DEVICE_ADDR(tmp));
     if (resIf->GetUint32(node, "busNum", &pl022Cntlr->busNum, 0) != HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: read busNum fail", __func__);
+        HDF_LOGE("%s: read busNum fail", __func__);
         return HDF_FAILURE;
     }
     if (resIf->GetUint32(node, "numCs", &pl022Cntlr->numCs, 0) != HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: read numCs fail", __func__);
+        HDF_LOGE("%s: read numCs fail", __func__);
         return HDF_FAILURE;
     }
     if (resIf->GetUint32(node, "speed", &pl022Cntlr->speed, DEFAULT_SPEED) != HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: read speed fail", __func__);
+        HDF_LOGE("%s: read speed fail", __func__);
         return HDF_FAILURE;
     }
     if (resIf->GetUint32(node, "fifoSize", &pl022Cntlr->fifoSize, 0) != HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: read fifoSize fail", __func__);
+        HDF_LOGE("%s: read fifoSize fail", __func__);
         return HDF_FAILURE;
     }
     if (resIf->GetUint32(node, "clkRate", &pl022Cntlr->clkRate, 0) != HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: read clkRate fail", __func__);
+        HDF_LOGE("%s: read clkRate fail", __func__);
         return HDF_FAILURE;
     }
     if (resIf->GetUint16(node, "mode", &pl022Cntlr->mode, 0) != HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: read mode fail", __func__);
+        HDF_LOGE("%s: read mode fail", __func__);
         return HDF_FAILURE;
     }
     if (resIf->GetUint8(node, "bitsPerWord", &pl022Cntlr->bitsPerWord, 0) != HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: read bitsPerWord fail", __func__);
+        HDF_LOGE("%s: read bitsPerWord fail", __func__);
         return HDF_FAILURE;
     }
     if (resIf->GetUint8(node, "transferMode", &pl022Cntlr->transferMode, 0) != HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: read comMode fail", __func__);
+        HDF_LOGE("%s: read comMode fail", __func__);
         return HDF_FAILURE;
     }
     pl022Cntlr->regCrg = REG_SPI_CRG;
@@ -316,7 +316,7 @@ static int32_t CreateSpiDev(struct Pl022SpiCntlr *pl022Cntlr)
     for (i = 0; i < pl022Cntlr->numCs; i++) {
         device = (struct SpiDev *)OsalMemCalloc(sizeof(*device));
         if (device == NULL) {
-            HDF_LOGE("%{public}s: OsalMemCalloc error", __func__);
+            HDF_LOGE("%s: OsalMemCalloc error", __func__);
             return HDF_FAILURE;
         }
         device->cntlr = pl022Cntlr->cntlr;

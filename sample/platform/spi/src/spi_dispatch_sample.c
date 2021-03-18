@@ -22,21 +22,21 @@
 
 static int32_t SampleSpiTransfer(struct SpiCntlr *cntlr, struct HdfSBuf *txBuf)
 {
-    HDF_LOGD("%{public}s: Enter", __func__);
+    HDF_LOGD("%s: Enter", __func__);
     uint32_t readSize = sizeof(struct SpiMsg);
     struct SpiMsg *msg = NULL;
 
     if (cntlr == NULL || cntlr->priv == NULL || txBuf == NULL) {
-        HDF_LOGE("%{public}s: invalid parameter", __func__);
+        HDF_LOGE("%s: invalid parameter", __func__);
         return HDF_ERR_INVALID_PARAM;
     }
     if (!HdfSbufReadBuffer(txBuf, (const void **)&msg, &readSize)) {
-        HDF_LOGE("%{public}s: Failed to read sbuf", __func__);
+        HDF_LOGE("%s: Failed to read sbuf", __func__);
         return HDF_DEV_ERR_NO_MEMORY;
     }
 
     if (SampleSpiCntlrTransfer(cntlr, msg, msg->len) != HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: SampleSpiCntlrTransfer error", __func__);
+        HDF_LOGE("%s: SampleSpiCntlrTransfer error", __func__);
         return HDF_FAILURE;
     }
     return HDF_SUCCESS;
@@ -45,13 +45,13 @@ static int32_t SampleSpiTransfer(struct SpiCntlr *cntlr, struct HdfSBuf *txBuf)
 int32_t SampleSpiDispatch(struct HdfDeviceIoClient *client, int cmdId, struct HdfSBuf *data, struct HdfSBuf *reply)
 {
     if (client == NULL || client->device == NULL) {
-        HDF_LOGE("%{public}s: client or client->device is NULL", __func__);
+        HDF_LOGE("%s: client or client->device is NULL", __func__);
         return HDF_FAILURE;
     }
 
     struct SpiCntlr *cntlr = (struct SpiCntlr *)client->device->service;
     if (cntlr == NULL || cntlr->method == NULL) {
-        HDF_LOGE("%{public}s: cntlr or cntlr->method is NULL", __func__);
+        HDF_LOGE("%s: cntlr or cntlr->method is NULL", __func__);
         return HDF_FAILURE;
     }
 
@@ -59,7 +59,7 @@ int32_t SampleSpiDispatch(struct HdfDeviceIoClient *client, int cmdId, struct Hd
         case SPI_TRANSFER:
             return SampleSpiTransfer(cntlr, data);
         default:
-            HDF_LOGE("%{public}s: invalid cmdId %{public}d", __func__, cmdId);
+            HDF_LOGE("%s: invalid cmdId %d", __func__, cmdId);
             return HDF_FAILURE;
     }
 }

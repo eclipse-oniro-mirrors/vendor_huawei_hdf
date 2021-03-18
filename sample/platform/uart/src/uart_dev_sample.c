@@ -35,10 +35,10 @@ static int32_t UartSampleDevOpen(FAR struct file *filep)
     inode = (struct inode *)filep->f_inode;
     host = (struct UartHost *)inode->i_private;
     if (host == NULL) {
-        HDF_LOGE("%{public}s: host is NULL", __func__);
+        HDF_LOGE("%s: host is NULL", __func__);
         return HDF_ERR_INVALID_PARAM;
     }
-    HDF_LOGI("%{public}s: open uart%{public}d success", __func__, host->num);
+    HDF_LOGI("%s: open uart%d success", __func__, host->num);
     return HDF_SUCCESS;
 }
 static int32_t UartSampleRelease(FAR struct file *filep)
@@ -52,10 +52,10 @@ static int32_t UartSampleRelease(FAR struct file *filep)
     inode = (struct inode *)filep->f_inode;
     host = (struct UartHost *)inode->i_private;
     if (host == NULL) {
-        HDF_LOGE("%{public}s: host is NULL", __func__);
+        HDF_LOGE("%s: host is NULL", __func__);
         return HDF_ERR_INVALID_PARAM;
     }
-    HDF_LOGI("%{public}s: close uart%{public}d success", __func__, host->num);
+    HDF_LOGI("%s: close uart%d success", __func__, host->num);
     return HDF_SUCCESS;
 }
 
@@ -74,7 +74,7 @@ static ssize_t UartSampleRead(FAR struct file *filep, FAR char *buf, size_t coun
     if (LOS_IsUserAddressRange((vaddr_t)buf, count)) {
         tmpBuf = (uint8_t *)OsalMemCalloc(count);
         if (tmpBuf == NULL) {
-            HDF_LOGE("%{public}s: OsalMemCalloc error", __func__);
+            HDF_LOGE("%s: OsalMemCalloc error", __func__);
             return HDF_ERR_MALLOC_FAIL;
         }
         ret = UartHostRead(host, tmpBuf, count);
@@ -103,7 +103,7 @@ static ssize_t UartSampleWrite(struct file *filep, const char *buf, size_t count
     if (LOS_IsUserAddressRange((vaddr_t)buf, count)) {
         tmpBuf = (uint8_t *)OsalMemCalloc(count);
         if (tmpBuf == NULL) {
-            HDF_LOGE("%{public}s: OsalMemCalloc error", __func__);
+            HDF_LOGE("%s: OsalMemCalloc error", __func__);
             return HDF_ERR_MALLOC_FAIL;
         }
         ret = LOS_ArchCopyFromUser(tmpBuf, buf, count);
@@ -135,13 +135,13 @@ static int32_t UartSampleDevIoctl(FAR struct file *filep, int32_t cmd, unsigned 
     if (host->priv == NULL) {
         return HDF_ERR_INVALID_PARAM;
     }
-    HDF_LOGD("%{public}s: num %{public}d", __func__, host->num);
+    HDF_LOGD("%s: num %d", __func__, host->num);
     switch (cmd) {
         case UART_CFG_BAUDRATE:
             ret = UartHostSetBaud(host, arg);
             break;
         default:
-            HDF_LOGE("%{public}s: cmd %{public}d not support", __func__, cmd);
+            HDF_LOGE("%s: cmd %d not support", __func__, cmd);
             ret = HDF_ERR_NOT_SUPPORT;
             break;
     }
@@ -163,29 +163,29 @@ static void AddRemoveUartDev(struct UartHost *host, bool add)
     char *devName = NULL;
 
     if (host == NULL || host->priv == NULL) {
-        HDF_LOGW("%{public}s: invalid parameter", __func__);
+        HDF_LOGW("%s: invalid parameter", __func__);
         return;
     }
     devName = (char *)OsalMemCalloc(sizeof(char) * (MAX_DEV_NAME_SIZE + 1));
     if (devName == NULL) {
-        HDF_LOGE("%{public}s: OsalMemCalloc error", __func__);
+        HDF_LOGE("%s: OsalMemCalloc error", __func__);
         return;
     }
     ret = snprintf_s(devName, MAX_DEV_NAME_SIZE + 1, MAX_DEV_NAME_SIZE, "/dev/uartdev-%d", host->num);
     if (ret < 0) {
-        HDF_LOGE("%{public}s: snprintf_s failed", __func__);
+        HDF_LOGE("%s: snprintf_s failed", __func__);
         OsalMemFree(devName);
         return;
     }
     if (add) {
         if (register_driver(devName, &g_uartSampleDevFops, HDF_UART_FS_MODE, host)) {
-            HDF_LOGE("%{public}s: gen /dev/uartdev-%{public}d fail!", __func__, host->num);
+            HDF_LOGE("%s: gen /dev/uartdev-%d fail!", __func__, host->num);
             OsalMemFree(devName);
             return;
         }
     } else {
         if (unregister_driver(devName)) {
-            HDF_LOGE("%{public}s: remove /dev/uartdev-%{public}d fail!", __func__, host->num);
+            HDF_LOGE("%s: remove /dev/uartdev-%d fail!", __func__, host->num);
             OsalMemFree(devName);
             return;
         }

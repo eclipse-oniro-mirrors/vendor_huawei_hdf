@@ -73,7 +73,7 @@ static void ReleaseGpioCntlrMem(struct Pl061GpioCntlr *cntlr);
 /* HdfDriverEntry hook function implementations */
 static int32_t SampleGpioDriverBind(struct HdfDeviceObject *device)
 {
-    HDF_LOGD("%{public}s: Enter", __func__);
+    HDF_LOGD("%s: Enter", __func__);
     struct Pl061GpioCntlr *pl061Cntlr = &g_samplePl061GpioCntlr;
     pl061Cntlr->cntlr.device = device;
     device->service = &(pl061Cntlr->cntlr.service);
@@ -86,34 +86,34 @@ static int32_t SampleGpioDriverInit(struct HdfDeviceObject *device)
     int32_t ret;
     struct Pl061GpioCntlr *pl061Cntlr = &g_samplePl061GpioCntlr;
 
-    HDF_LOGD("%{public}s: Enter", __func__);
+    HDF_LOGD("%s: Enter", __func__);
     if (device == NULL || device->property == NULL) {
-        HDF_LOGE("%{public}s: device or property NULL!", __func__);
+        HDF_LOGE("%s: device or property NULL!", __func__);
         return HDF_ERR_INVALID_OBJECT;
     }
 
     ret = GetGpioDeviceResource(pl061Cntlr, device->property);
     if (ret != HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: get gpio device resource fail:%{public}d", __func__, ret);
+        HDF_LOGE("%s: get gpio device resource fail:%d", __func__, ret);
         return ret;
     }
 
     if (pl061Cntlr->groupNum > GROUP_MAX || pl061Cntlr->groupNum <= 0 || pl061Cntlr->bitNum > BIT_MAX ||
         pl061Cntlr->bitNum <= 0) {
-        HDF_LOGE("%{public}s: invalid groupNum:%{public}u or bitNum:%{public}u", __func__, pl061Cntlr->groupNum,
+        HDF_LOGE("%s: invalid groupNum:%u or bitNum:%u", __func__, pl061Cntlr->groupNum,
                  pl061Cntlr->bitNum);
         return HDF_ERR_INVALID_PARAM;
     }
 
     pl061Cntlr->regBase = OsalIoRemap(pl061Cntlr->phyBase, pl061Cntlr->groupNum * pl061Cntlr->regStep);
     if (pl061Cntlr->regBase == NULL) {
-        HDF_LOGE("%{public}s: err remap phy:0x%{public}x", __func__, pl061Cntlr->phyBase);
+        HDF_LOGE("%s: err remap phy:0x%x", __func__, pl061Cntlr->phyBase);
         return HDF_ERR_IO;
     }
 
     ret = InitGpioCntlrMem(pl061Cntlr);
     if (ret != HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: err init cntlr mem:%{public}d", __func__, ret);
+        HDF_LOGE("%s: err init cntlr mem:%d", __func__, ret);
         OsalIoUnmap((void *)pl061Cntlr->regBase);
         pl061Cntlr->regBase = NULL;
         return ret;
@@ -123,10 +123,10 @@ static int32_t SampleGpioDriverInit(struct HdfDeviceObject *device)
     pl061Cntlr->cntlr.ops = &g_sampleGpioMethod;
     ret = GpioCntlrAdd(&pl061Cntlr->cntlr);
     if (ret != HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: err add controller: %{public}d", __func__, ret);
+        HDF_LOGE("%s: err add controller: %d", __func__, ret);
         return ret;
     }
-    HDF_LOGI("%{public}s: dev service:%{public}s init success!", __func__, HdfDeviceGetServiceName(device));
+    HDF_LOGI("%s: dev service:%s init success!", __func__, HdfDeviceGetServiceName(device));
     return ret;
 }
 
@@ -135,15 +135,15 @@ static void SampleGpioDriverRelease(struct HdfDeviceObject *device)
     struct GpioCntlr *gpioCntlr = NULL;
     struct Pl061GpioCntlr *pl061GpioCntlr = NULL;
 
-    HDF_LOGD("%{public}s: Enter", __func__);
+    HDF_LOGD("%s: Enter", __func__);
     if (device == NULL) {
-        HDF_LOGE("%{public}s: device is null!", __func__);
+        HDF_LOGE("%s: device is null!", __func__);
         return;
     }
 
     gpioCntlr = GpioCntlrFromDevice(device);
     if (gpioCntlr == NULL) {
-        HDF_LOGE("%{public}s: no service bound!", __func__);
+        HDF_LOGE("%s: no service bound!", __func__);
         return;
     }
     GpioCntlrRemove(gpioCntlr);
@@ -162,43 +162,43 @@ static int32_t GetGpioDeviceResource(struct Pl061GpioCntlr *cntlr, const struct 
 
     dri = DeviceResourceGetIfaceInstance(HDF_CONFIG_SOURCE);
     if (dri == NULL || dri->GetUint8 == NULL || dri->GetUint16 == NULL || dri->GetUint32 == NULL) {
-        HDF_LOGE("%{public}s: invalid dri ops fail!", __func__);
+        HDF_LOGE("%s: invalid dri ops fail!", __func__);
         return HDF_FAILURE;
     }
 
     ret = dri->GetUint32(node, "regBase", &cntlr->phyBase, 0);
     if (ret != HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: read regBase fail!", __func__);
+        HDF_LOGE("%s: read regBase fail!", __func__);
         return ret;
     }
 
     ret = dri->GetUint32(node, "regStep", &cntlr->regStep, 0);
     if (ret != HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: read regStep fail!", __func__);
+        HDF_LOGE("%s: read regStep fail!", __func__);
         return ret;
     }
 
     ret = dri->GetUint16(node, "groupNum", &cntlr->groupNum, 0);
     if (ret != HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: read groupNum fail!", __func__);
+        HDF_LOGE("%s: read groupNum fail!", __func__);
         return ret;
     }
 
     ret = dri->GetUint16(node, "bitNum", &cntlr->bitNum, 0);
     if (ret != HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: read bitNum fail!", __func__);
+        HDF_LOGE("%s: read bitNum fail!", __func__);
         return ret;
     }
 
     ret = dri->GetUint32(node, "irqStart", &cntlr->irqStart, 0);
     if (ret != HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: read irqStart fail!", __func__);
+        HDF_LOGE("%s: read irqStart fail!", __func__);
         return ret;
     }
 
     ret = dri->GetUint8(node, "irqShare", &cntlr->irqShare, 0);
     if (ret != HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: read irqShare fail!", __func__);
+        HDF_LOGE("%s: read irqShare fail!", __func__);
         return ret;
     }
 
@@ -252,7 +252,7 @@ static void ReleaseGpioCntlrMem(struct Pl061GpioCntlr *cntlr)
 /* GPIO function implementations */
 static int32_t SampleGpioWrite(struct GpioCntlr *cntlr, uint16_t gpio, uint16_t val)
 {
-    HDF_LOGD("%{public}s: Enter", __func__);
+    HDF_LOGD("%s: Enter", __func__);
 
     int32_t ret;
     uint32_t irqSave;
@@ -278,13 +278,13 @@ static int32_t SampleGpioWrite(struct GpioCntlr *cntlr, uint16_t gpio, uint16_t 
     }
     OSAL_WRITEL(valCur, addr);
     (void)OsalSpinUnlockIrqRestore(&group->lock, &irqSave);
-    HDF_LOGD("%{public}s: gpio:%{public}u, val:%{public}u", __func__, gpio, val);
+    HDF_LOGD("%s: gpio:%u, val:%u", __func__, gpio, val);
     return HDF_SUCCESS;
 }
 
 static int32_t SampleGpioRead(struct GpioCntlr *cntlr, uint16_t gpio, uint16_t *val)
 {
-    HDF_LOGD("%{public}s: Enter", __func__);
+    HDF_LOGD("%s: Enter", __func__);
 
     int32_t ret;
     unsigned int valCur;
@@ -304,13 +304,13 @@ static int32_t SampleGpioRead(struct GpioCntlr *cntlr, uint16_t gpio, uint16_t *
     } else {
         *val = GPIO_VAL_LOW;
     }
-    HDF_LOGD("%{public}s: gpio:%{public}u, val:%{public}u", __func__, gpio, *val);
+    HDF_LOGD("%s: gpio:%u, val:%u", __func__, gpio, *val);
     return HDF_SUCCESS;
 }
 
 static int32_t SampleGpioSetDirection(struct GpioCntlr *cntlr, uint16_t gpio, uint16_t dir)
 {
-    HDF_LOGD("%{public}s: Enter", __func__);
+    HDF_LOGD("%s: Enter", __func__);
 
     int32_t ret;
     uint32_t irqSave;
@@ -319,7 +319,7 @@ static int32_t SampleGpioSetDirection(struct GpioCntlr *cntlr, uint16_t gpio, ui
     unsigned int bitNum = Pl061ToBitNum(gpio);
     struct GpioGroup *group = NULL;
 
-    HDF_LOGD("%{public}s: gpio:%{public}u, dir:%{public}d", __func__, gpio, dir);
+    HDF_LOGD("%s: gpio:%u, dir:%d", __func__, gpio, dir);
     ret = Pl061GetGroupByGpioNum(cntlr, gpio, &group);
     if (ret != HDF_SUCCESS) {
         return ret;
@@ -341,7 +341,7 @@ static int32_t SampleGpioSetDirection(struct GpioCntlr *cntlr, uint16_t gpio, ui
 }
 static int32_t SampleGpioGetDirection(struct GpioCntlr *cntlr, uint16_t gpio, uint16_t *dir)
 {
-    HDF_LOGD("%{public}s: Enter", __func__);
+    HDF_LOGD("%s: Enter", __func__);
 
     int32_t ret;
     unsigned int val;
@@ -349,7 +349,7 @@ static int32_t SampleGpioGetDirection(struct GpioCntlr *cntlr, uint16_t gpio, ui
     unsigned int bitNum = Pl061ToBitNum(gpio);
     struct GpioGroup *group = NULL;
 
-    HDF_LOGD("%{public}s: gpio:%{public}u, dir:%{public}d", __func__, gpio, dir);
+    HDF_LOGD("%s: gpio:%u, dir:%d", __func__, gpio, dir);
     ret = Pl061GetGroupByGpioNum(cntlr, gpio, &group);
     if (ret != HDF_SUCCESS) {
         return ret;

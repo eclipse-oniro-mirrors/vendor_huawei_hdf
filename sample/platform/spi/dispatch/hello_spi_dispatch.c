@@ -42,7 +42,7 @@ int main()
     msg.speed = 115200;       /* Speed of this transfer */
     ret = SpiTransfer(spiHandle, &msg);
     if (ret != HDF_SUCCESS) {
-        HDF_LOGE("SpiTransfer failed, ret %{public}d", ret);
+        HDF_LOGE("SpiTransfer failed, ret %d", ret);
         return ret;
     }
     SpiClose(spiHandle);
