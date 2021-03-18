@@ -29,16 +29,16 @@ int main(void)
 
     fd = open("/dev/uartdev-5", O_RDWR);
     if (fd < 0) {
-        HDF_LOGE("uartdev-5 open failed %{public}d", fd);
+        HDF_LOGE("uartdev-5 open failed %d", fd);
         return -1;
     }
     ret = write(fd, info, INFO_SIZE);
     if (ret != 0) {
-        HDF_LOGE("write uartdev-5 ret is %{public}d", ret);
+        HDF_LOGE("write uartdev-5 ret is %d", ret);
     }
     ret = close(fd);
     if (ret != 0) {
-        HDF_LOGE("uartdev-5 close failed %{public}d", fd);
+        HDF_LOGE("uartdev-5 close failed %d", fd);
         return -1;
     }
     return ret;
