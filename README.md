@@ -6,7 +6,7 @@
 
 ## Introduction<a name="section11660541533"></a>
 
-This repository shows some HDF sample drivers.
+This repository shows driver configuration and platform driver code examples.
 
 ## Directory Structure<a name="section161941989586"></a>
 
