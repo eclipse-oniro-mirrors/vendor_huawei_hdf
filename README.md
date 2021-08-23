@@ -21,14 +21,15 @@ The source code directory structure is as follows:
 
 ## Repositories Involved<a name="section1371113476308"></a>
 
-Driver subsystem
+[Driver subsystem](https://gitee.com/openharmony/docs/blob/master/en/readme/driver-subsystem.md)
 
-hmf/drivers/framework
+[drivers\_framework](https://gitee.com/openharmony/drivers_framework/blob/master/README.md)
 
-hmf/drivers/adapter\_lite\_khdf
+[drivers\_adapter](https://gitee.com/openharmony/drivers_adapter/blob/master/README.md)
 
-hmf/drivers/adapter\_lite\_uhdf
+[drivers\_adapter\_khdf\_linux](https://gitee.com/openharmony/drivers_adapter_khdf_linux/blob/master/README.md)
 
-hmf/drivers/adapter\_linux\_khdf
+[drivers\_peripheral](https://gitee.com/openharmony/drivers_peripheral/blob/master/README.md)
 
-hmf/drivers/adapter\_linux\_uhdf
+vendor_huawei_hdf
+
