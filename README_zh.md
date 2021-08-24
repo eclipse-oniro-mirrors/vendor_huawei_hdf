@@ -29,7 +29,7 @@
 
 [drivers\_adapter\_khdf\_linux](https://gitee.com/openharmony/drivers_adapter_khdf_linux/blob/master/README_zh.md)
 
-[drivers_peripheral](https://gitee.com/openharmony/drivers_peripheral/blob/master/README_zh.md)
+[drivers\_peripheral](https://gitee.com/openharmony/drivers_peripheral/blob/master/README_zh.md)
 
 vendor_huawei_hdf
 
